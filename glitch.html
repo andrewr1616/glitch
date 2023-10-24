@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Family Glitch Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: rgb(179, 247, 224);
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+      input[type="number"] {
+        width: 200px;
+        padding: 5px;
+      }
+      select {
+        width: 200px;
+        padding: 5px;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: blue;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      #result {
+        margin-top: 20px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 30px;
+      }
+      h1 {
+        text-align: center;
+      }
+      h2 {
+        text-align: center;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Family Glitch Caculator</h1>
+    <h2>
+      Employee portion for Employer Coverage has to exceed 9.12% in order to
+      qualify (be deemed “unaffordable”) · Employee and Family* portion for
+      Employer Coverage has to exceed 9.12% of the Household income *If employee
+      portion is deemed affordable, but family portion is unaffordable, employee
+      does not qualify for subsidy, but family can
+    </h2>
+    <form id="insuranceForm">
+      <label for="yearlyIncome">Yearly Income:</label>
+      <input type="number" id="yearlyIncome" required />
+      <label for="employerCost">Employee Only Insurance Cost:</label>
+      <input type="number" id="employerCost" required />
+      <label for="familyCost">Family Insurance Cost:</label>
+      <input type="number" id="familyCost" required />
+      <label for="paymentFrequency">Payment Frequency:</label>
+      <select id="paymentFrequency">
+        <option value="monthly">Monthly</option>
+        <option value="biweekly">Biweekly</option>
+      </select>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+      document
+        .getElementById("insuranceForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent form submission
+
+          // Get input values
+          let yearlyIncome = parseFloat(
+            document.getElementById("yearlyIncome").value
+          );
+          let employerCost = parseFloat(
+            document.getElementById("employerCost").value
+          );
+          let familyCost = parseFloat(
+            document.getElementById("familyCost").value
+          );
+          let paymentFrequency =
+            document.getElementById("paymentFrequency").value;
+
+          // Calculate results
+          let monthlyIncome = yearlyIncome / 12;
+          let monthlyEmployerCost = employerCost;
+          let monthlyFamilyCost = familyCost;
+          if (paymentFrequency === "biweekly") {
+            monthlyEmployerCost *= 2;
+            monthlyFamilyCost *= 2;
+          }
+          let employerInsurancePercentage =
+            (monthlyEmployerCost / monthlyIncome) * 100;
+          let familyInsurancePercentage =
+            (monthlyFamilyCost / monthlyIncome) * 100;
+
+          // Display results
+          let resultElement = document.getElementById("result");
+          resultElement.innerHTML =
+            "Monthly Income: $" +
+            monthlyIncome.toFixed(2) +
+            "<br>Monthly Employee Only Insurance Cost: $" +
+            monthlyEmployerCost.toFixed(2) +
+            "<br>Employee Insurance Cost to Yearly Income: " +
+            employerInsurancePercentage.toFixed(2) +
+            "%";
+
+          let familyInsuranceResult = document.createElement("p");
+          familyInsuranceResult.innerHTML =
+            "Monthly Family Insurance Cost: $" +
+            monthlyFamilyCost.toFixed(2) +
+            "<br>Family Insurance Cost to Yearly Income: " +
+            familyInsurancePercentage.toFixed(2) +
+            "%";
+          if (familyInsurancePercentage > 9.12) {
+            familyInsuranceResult.style.color = "green";
+          } else {
+            familyInsuranceResult.style.color = "red";
+          }
+          resultElement.appendChild(familyInsuranceResult);
+
+          // Set text color based on percentage
+          if (employerInsurancePercentage > 9.12) {
+            resultElement.style.color = "green";
+          } else {
+            resultElement.style.color = "red";
+          }
+        });
+    </script>
+  </body>
+</html>
